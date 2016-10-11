@@ -23,15 +23,13 @@ var port_listen = 6969;
 var port_mysql = 3306;
 var puerto_io = 3000;
 var mysql = require('mysql');//para la comunicacion con la bdd 
-var express = require('express')//EL ESL L ENCARGADO DE LA COMUNCION DE URLS 
-        , cors = require('cors')//EL NOS FACILITA LA COMUNICACION A ESAS URLS  ACCESO A ESA URL
-        , app = express();
-app.use(cors());
+var express = require('express');//EL ESL L ENCARGADO DE LA COMUNCION DE URLS 
+var cors = require('cors');//EL NOS FACILITA LA COMUNICACION A ESAS URLS  ACCESO A ESA URL
+var app = express();
+//app.use(cors());
 var io = require('socket.io').listen(puerto_io);//REALIZA UN PUENTE ENTRE TU APP-SISTEMA DE GESTION ---COMUNICACION ENTRE LOS DOS HACIA TU SERVIDOR
 //-------------------END MODULOS A UTILIZAR-------------
 
-//--------CONECCCION DE LA BDD--------
-var connection = mysql.createConnection(params_bdd);
 //--------PERSONA----
 //--------VARIABLES GLOBALES DE TABLAS--
 var entidad_data_id = 1;//dond s almacenara la informacion dlos usuaiors 
@@ -40,8 +38,9 @@ var cuenta_persona = "cuenta_persona";//children
 var persona = "persona";//parent
 
 var port_procesa = process.env.PORT;
-
+console.log("---------------------------");
 app.set('port', port_procesa);
+console.log("---------------------------", port_procesa)
 
 app.use(express.static(__dirname + '/public'));
 
@@ -61,85 +60,18 @@ app.listen(app.get('port'), function () {
 app.get('/createPersonaInformacion', function (req, res, next) {
     var result = [];
 
-    var post = req.query;
-    if (!post.id) {//crear nuevo
-        var phone_number = post.phone_number;
-        var query_string = "SELECT * FROM  " + cuenta_persona + " t  where  t.phone_number=" + phone_number;
-        var objec_conection_bdd = connection;
-        var params_data = {query_string: query_string, objec_conection_bdd: objec_conection_bdd};
-        getDataModel(params_data, function (data) {
-
-            if (data.length == 0) {
-                var data_save = {nombres: post.nombres, apellidos: post.apellidos, persona_genero_id: post.persona_genero_id};
-                var query = connection.query('INSERT INTO ' + persona + ' SET ?', data_save, function (err, result) {
-                    // Neat! 
-                    var persona_id = result.insertId;
-                    var data_save_children = {entidad_data_id: entidad_data_id, persona_id: persona_id, pass_user: post.pass_user, persona_genero_id: post.persona_genero_id, documento: post.documento};
-
-                    var query2 = connection.query('INSERT INTO ' + cuenta_persona + ' SET ?', data_save_children, function (err, result) {
-                        result = {
-                            success: false,
-                            msj: "Se Registro Correctamente."
-                        };
-                        res.json(result);
-
-                    });
-                });
-            } else {
-                result = {
-                    success: false,
-                    msj: "El # ya fue tomado:" + phone_number
-                };
-                res.json(result);
-
-            }
-
-        });
-//        var query = connection.query('INSERT INTO ' + table_name + ' SET ?', post, function (err, result) {
-//            // Neat! 
-//            var data = {id: result.insertId, nombres: post.nombres, apellidos: post.apellidos, documento: post.documento}
-//            res.json({success: true, data: data});
-//        });
-    } else {
-        var queryString = 'UPDATE  persona_informacion SET nombres="' + post.nombres + '",' + 'apellidos="' + post.apellidos + '",' + 'documento="' + post.documento + '" WHERE persona_informacion.id=' + post.id;
-
-        connection.query(queryString, function (err, result) {
-
-            var data = {id: post.id, nombres: post.nombres, apellidos: post.apellidos, documento: post.documento}
-            res.json({success: true, data: data, update: true});
-        });
-    }
-
 
 });
 
 app.get('/personaInformacionAll', function (req, res, next) {
-//    SELECT * FROM  persona_catalogo ORDER BY id DESC
-    var result;
-    var query_string = "SELECT * FROM  persona_informacion";
-    var objec_conection_bdd = connection;
-    var params_data = {query_string: query_string, objec_conection_bdd: objec_conection_bdd};
-    getDataModel(params_data, function (data) {
-        console.log("obtener informacion", data);
-        res.json(data);
-    });
-    console.log("obtener informacion");
+
 });
 
 //---END PERSONA--
 app.get('/api', function (req, res) {
     res.send('Admin Homepage');
 });
-connection.connect(function (err) {
-    if (err) {
-        console.log('Error connecting to Db');
-        return;
-    } else {
 
-        console.log('Connection established');
-    }
-
-});
 //---------END METODOS DL SISTEMA--
 //------------ init SOCKETS CONFIGURACION--//-------NEWS--------
 var server_user = [];
@@ -181,4 +113,19 @@ function getDataModel($params, callback) {
         }
     });
     return result;
+}
+function initBdd() {
+
+//--------CONECCCION DE LA BDD--------
+    var connection = mysql.createConnection(params_bdd);
+    connection.connect(function (err) {
+        if (err) {
+            console.log('Error connecting to Db');
+            return;
+        } else {
+
+            console.log('Connection established');
+        }
+
+    });
 }
