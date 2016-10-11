@@ -11,10 +11,10 @@
     },
     "dependencies": {
         "ejs": "2.4.1",
+        "socket.io": "latest",
         "express": "4.13.3",
         "mysql": "*",
-        "cors": "*",
-        "socket.io": "*"
+        "cors": "*"
     },
     "keywords": [
         "node",
