@@ -27,7 +27,7 @@ var express = require('express');//EL ESL L ENCARGADO DE LA COMUNCION DE URLS
 var cors = require('cors');//EL NOS FACILITA LA COMUNICACION A ESAS URLS  ACCESO A ESA URL
 var app = express();
 //app.use(cors());
-var io = require('socket.io').listen(puerto_io);//REALIZA UN PUENTE ENTRE TU APP-SISTEMA DE GESTION ---COMUNICACION ENTRE LOS DOS HACIA TU SERVIDOR
+//var io = require('socket.io').listen(puerto_io);//REALIZA UN PUENTE ENTRE TU APP-SISTEMA DE GESTION ---COMUNICACION ENTRE LOS DOS HACIA TU SERVIDOR
 //-------------------END MODULOS A UTILIZAR-------------
 
 //--------PERSONA----
@@ -78,25 +78,25 @@ var server_user = [];
 var clients = [];
 var group_leader = [];
 //------------ END SOCKETS CONFIGURACION--//-------NEWS--------
-io.on('connection', function (socket) {
-    console.log("ntro al sokec");
-//    ---persona agregada--
-    socket.on("persona_informacion", function (data) {
-        console.log("agregar personas");
-        io.emit("persona_informacion_add", data);
-    });
-
-//  -----------------NEW--------------
-    //esto sirve para emitir
-    io.emit('user_connection', socket.id);
-    io.emit("server_user", server_user);
-
-    socket.on("set_data", function (data) {
-        console.log("usuario enviando front", data);
-    });
-
-
-});
+//io.on('connection', function (socket) {
+//    console.log("ntro al sokec");
+////    ---persona agregada--
+//    socket.on("persona_informacion", function (data) {
+//        console.log("agregar personas");
+//        io.emit("persona_informacion_add", data);
+//    });
+//
+////  -----------------NEW--------------
+//    //esto sirve para emitir
+//    io.emit('user_connection', socket.id);
+//    io.emit("server_user", server_user);
+//
+//    socket.on("set_data", function (data) {
+//        console.log("usuario enviando front", data);
+//    });
+//
+//
+//});
 function getDataModel($params, callback) {
     var result;
     var query_string = $params.query_string;
