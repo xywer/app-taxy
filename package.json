@@ -13,9 +13,9 @@
         "ejs": "2.4.1",
         "express": "4.13.3",
         "mysql": "*",
-        "cors": "*"
+        "cors": "*",
+        "socket.io": "*"
     },
- 
     "keywords": [
         "node",
         "heroku",

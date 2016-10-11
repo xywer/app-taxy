@@ -40,9 +40,8 @@ var cuenta_persona = "cuenta_persona";//children
 var persona = "persona";//parent
 
 var port_procesa = process.env.PORT;
-console.log("puerto q procesa", port_procesa);
 
-app.set('port', (port_procesa || 5000));
+app.set('port', port_procesa);
 
 app.use(express.static(__dirname + '/public'));
 
